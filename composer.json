@@ -1,0 +1,24 @@
+{
+  "name": "shugachara/db-server",
+  "type": "library",
+  "description": "DB 服务",
+  "keywords" : ["mysql", "db", "php", "server", "build"],
+  "homepage": "https://github.com/shugachara/db-server",
+  "license" : "Apache-2.0",
+  "authors": [
+    {
+      "name": "shugachara",
+      "email": "1099013371@qq.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "shugachara/core": "^1.0",
+    "shugachara/databases": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "ShugaChara\\DbServer\\": "src/"
+    }
+  }
+}
