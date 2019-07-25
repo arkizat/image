@@ -1,6 +1,6 @@
-# PHP 数据打包、解包工具
+# PHP Image 图片处理
 
-[![GitHub release](https://img.shields.io/github/release/shugachara/packet.svg)](https://github.com/shugachara/packet/releases)
+[![GitHub release](https://img.shields.io/github/release/shugachara/image.svg)](https://github.com/shugachara/image/releases)
 [![PHP version](https://img.shields.io/badge/php-%3E%207-orange.svg)](https://github.com/php/php-src)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](#LICENSE)
 
@@ -11,7 +11,7 @@
 ### 安装说明
 
 ```
-composer require "shugachara/packet"
+composer require "shugachara/image"
 ```
 
 ### 使用方式
@@ -62,7 +62,7 @@ $origin = Json::decode($data);
 
 非常欢迎感兴趣，愿意参与其中，共同打造更好PHP生态，Swoole生态的开发者。
 
-* 在你的系统中使用，将遇到的问题 [反馈](https://github.com/shugachara/packet/issues)
+* 在你的系统中使用，将遇到的问题 [反馈](https://github.com/shugachara/image/issues)
 
 ### 联系
 

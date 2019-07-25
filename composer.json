@@ -1,9 +1,9 @@
 {
-  "name": "shugachara/db-server",
+  "name": "shugachara/image",
   "type": "library",
-  "description": "DB 服务",
-  "keywords" : ["mysql", "db", "php", "server", "build"],
-  "homepage": "https://github.com/shugachara/db-server",
+  "description": "图片处理, 裁剪/水印/合成...",
+  "keywords" : ["image", "php"],
+  "homepage": "https://github.com/shugachara/image",
   "license" : "Apache-2.0",
   "authors": [
     {
@@ -13,12 +13,11 @@
   ],
   "require": {
     "php": ">=7.0",
-    "shugachara/core": "^1.0",
-    "shugachara/databases": "^1.0"
+    "shugachara/core": "^1.0"
   },
   "autoload": {
     "psr-4": {
-      "ShugaChara\\DbServer\\": "src/"
+      "ShugaChara\\Image\\": "src/"
     }
   }
 }
