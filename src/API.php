@@ -430,25 +430,25 @@ class API
     }
 
     /*
-     * 绘图文字分行函数
+     * 绘图文字分行函数 / 文字自动换行
      *
-     * by COoL
      * - 输入：
      * str: 原字符串
-     * fontFamily: 字体
+     * width: 限制每行宽度(px)
      * fontSize: 字号
      * charset: 字符编码
-     * width: 限制每行宽度(px)
      * - 输出：
      * 分行后的字符串数组
      */
-    function autoLineSplit ($str, $fontFamily, $fontSize, $charset, $width) {
+    public function autoLineSplit ($str, $width, $fontSize = 0, $charset = 'utf8') {
         $result = [];
 
         $len = (strlen($str) + mb_strlen($str, $charset)) / 2;
 
+        $fontSize = $fontSize ? $fontSize : $this->textSize;
+
         // 计算总占宽
-        $dimensions = imagettfbbox($fontSize, 0, $fontFamily, $str);
+        $dimensions = imagettfbbox($fontSize, 0, $this->font, $str);
         $textWidth = abs($dimensions[4] - $dimensions[0]);
 
         // 计算每个字符的长度
