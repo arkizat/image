@@ -16,42 +16,45 @@ composer require "shugachara/image"
 
 ### 使用方式
 
-二进制数据打包的时候程序会将内容加入 “盐(SALT)” 来强化数据安全性，如果需要自定义盐值，需要在实现类中重写 `ShugaChara\Packet\PacketInterface::SALT` 类常量。
-
-##### 二进制
-
 ```php
-use ShugaChara\Packet\Binary;
+<?php 
+use ShugaChara\Image\ImageDeal;
 
-$origin = ['name' => 'shugachara'];
+$imageUrl = app()->getPath() . '/4.png';
+$textFont = app()->getPath() . '/PINGFANG_HEAVY.TTF';
+$textSize = 34;
+$textColor = '#ffffff';
 
-$data = Binary::encode($origin);
-$origin = Binary::decode($data);
+// 案例一
+$imageDeal = new ImageDeal($imageUrl);
+$imageDeal->setFont($textFont);
+$imageDeal->setPos(4);
+$imageDeal->setPosX(300);
+$imageDeal->setPosY(-40);
+$imageDeal->waterText('2019年下半年能', $textSize, $textColor);
+$imageDeal->setPosX(300);
+$imageDeal->setPosY(20);
+$imageDeal->waterText('赚到钱吗?',  $textSize, $textColor);
+$imageDeal->preview();
 
-/**
- * Array(
- *      "name" => "shugachara"
- * )
- */
-```
+// 案例二
+$imageDeal = new ImageDeal($imageUrl);
+$imageDeal->setFont($textFont);
+$imageDeal->setPos(4);
+$imageDeal->setPosX(300);
+// 文字自动换行
+$lineSplit = $imageDeal->autoLineSplit('2019年下半年能赚到钱吗?', 340, $textSize);
+$posY = -40;
+foreach ($lineSplit as $item) {
+    $imageDeal->setPosY($posY);
+    $imageDeal->waterText($item, $textSize, $textColor);
+    $posY += 60;
+}
+// 在线预览图片
+$imageDeal->preview();
 
-##### ＃JSON
-
-JSON 数据在打包的时候同样会加入盐值，程序自行追加，并且会对盐值进行在加密，在数据处理解析返回会自动移除盐值，返回纯净数据。因此在传入数据的时候需要注意不要存在 `packet_salt` 字段。
-
-```php
-use ShugaChara\Packet\Json;
-
-$origin = ['name' => 'shugachara'];
-
-$data = Json::encode($origin);
-$origin = Json::decode($data);
-
-/**
- * Array(
- *      "name" => "shugachara"
- * )
- */
+// 保存图片
+$imageDeal->save(app()->getPath() . '/out.png');
 ```
 
 ## 更新日志

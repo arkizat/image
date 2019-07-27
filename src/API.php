@@ -87,7 +87,7 @@ class API
      *
      * @var resource
      */
-    private $resIm;
+    private $sourceMap;
 
     /**
      * 原图高度
@@ -111,8 +111,8 @@ class API
     private $result = false;
 
     /**
-     * @param $image ‘原图路径’
-     * @param array $config ‘配置数组’
+     * @param $imageUrl 原图路径
+     * @param array $config 配置数组
      */
     public function __construct($imageUrl, array $config = [])
     {
@@ -125,7 +125,7 @@ class API
         }
 
         // 读取背景图片数据流
-        $imageIm = imagecreatefromstring(file_get_contents($imageUrl));
+        $imageIm = $this->getImageStream($imageUrl);
         if ($imageIm !== false){
             list($this->canvasWidth, $this->canvasHeight) = $this->getImageInfo($imageUrl);
             $this->resIm  = imagecreatetruecolor($this->canvasWidth, $this->canvasHeight);
@@ -271,14 +271,25 @@ class API
     }
 
     /**
+     * 获取图片数据流
+     *
+     * @param $imageUrl
+     * @return resource
+     */
+    public function getImageStream($imageUrl)
+    {
+        return imagecreatefromstring(file_get_contents($imageUrl));
+    }
+
+    /**
      * 获取图片数据
      *
      * @param $image
      * @return array
      */
-    private function getImageInfo($image)
+    private function getImageInfo($imageUrl)
     {
-        $imageInfo = @getimagesize($image);
+        $imageInfo = @getimagesize($imageUrl);
         if (empty($imageInfo)) {
             return [0, 0];
         }
