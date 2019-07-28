@@ -17,6 +17,11 @@
 
 namespace ShugaChara\Image;
 
+/**
+ * Class ImageDeal
+ *
+ * @package ShugaChara\Image
+ */
 class ImageDeal
 {
     /**
@@ -127,7 +132,7 @@ class ImageDeal
     }
 
     /**
-     * 创建图像画布
+     * 创建图像画布并填充颜色
      *
      * @param     $width                    图像画布宽度
      * @param     $height                   图像画布高度
@@ -140,11 +145,9 @@ class ImageDeal
     public function createTrueColorImage($width, $height, $redColor = 255, $greenColor = 255, $blueColor = 255, $colorPosX = 0, $colorPosY = 0)
     {
         // 新建一个真彩色图像
-        $newTrueColorImage = imagecreatetruecolor($width, $height);
-        // 为真彩色图像分配颜色
-        $white = imagecolorallocate($newTrueColorImage, $redColor, $greenColor, $blueColor);
+        $newTrueColorImage = $this->imageCreateTrueColor($width, $height);
         // 区域填充分配的颜色
-        imagefill($newTrueColorImage, $colorPosX, $colorPosY, $white);
+        $this->imageFill($newTrueColorImage, $colorPosX, $colorPosY, $redColor, $greenColor, $blueColor);
 
         return $newTrueColorImage;
     }
@@ -160,7 +163,6 @@ class ImageDeal
         $this->imageResource = $imageResource;
         $this->backgroundImageWidth = $this->imageSX($imageResource);
         $this->backgroundImageHeight = $this->imageSY($imageResource);
-        $this->backgroundImageMime;
 
         return $this;
     }
@@ -205,6 +207,18 @@ class ImageDeal
     public function imageSY($imageResource)
     {
         return (int) imagesy($imageResource);
+    }
+
+    /**
+     * 新建一个真彩色图像
+     *
+     * @param int $width
+     * @param int $height
+     * @return false|resource
+     */
+    public function imageCreateTrueColor($width, $height)
+    {
+        return imagecreatetruecolor($width, $height);
     }
 
     /**
@@ -312,6 +326,24 @@ class ImageDeal
     }
 
     /**
+     * 区域填充图像颜色
+     *
+     * @param     $imageResource
+     * @param int $colorPosX
+     * @param int $colorPosY
+     * @param int $redColor
+     * @param int $greenColor
+     * @param int $blueColor
+     */
+    public function imageFill($imageResource, $colorPosX = 0, $colorPosY = 0, $redColor = 255, $greenColor = 255, $blueColor = 255)
+    {
+        // 为真彩色图像分配颜色
+        $white = imagecolorallocate($imageResource, $redColor, $greenColor, $blueColor);
+        // 区域填充分配的颜色
+        imagefill($imageResource, $colorPosX, $colorPosY, $white);
+    }
+
+    /**
      * 取得使用 TrueType 字体的文本的范围       (本函数计算并返回一个包围着 TrueType 文本范围的虚拟方框的像素大小)
      *
      * @param $size             像素单位的字体大小
@@ -358,6 +390,25 @@ class ImageDeal
     public function imageCopyMerge($imageResource, $originalImageResoure, $srcWidth, $srcHeight, $dstX = 0, $dstY = 0, $srcX = 0, $srcY = 0, $opacity = 0)
     {
         imagecopymerge($imageResource, $originalImageResoure, $dstX, $dstY, $srcX, $srcY, $srcWidth, $srcHeight, $opacity);
+    }
+
+    /**
+     * 重采样拷贝部分图像并调整大小 (可用于裁剪)
+     *
+     * @param     $imageResource                    目标图像链接资源
+     * @param     $originalImageResoure             源图像链接资源
+     * @param     $srcWidth                         源宽度
+     * @param     $srcHeight                        源点高度
+     * @param     $dstWidth                         目标宽度
+     * @param     $dstHeight                        目标高度
+     * @param int $dstX                             目标点的x坐标
+     * @param int $dstY                             目标点的y坐标
+     * @param int $srcX                             源点的x坐标
+     * @param int $srcY                             源点的y坐标
+     */
+    public function imageCopyResAmPled($imageResource, $originalImageResoure, $srcWidth, $srcHeight, $dstWidth, $dstHeight, $dstX = 0, $dstY = 0, $srcX = 0, $srcY = 0)
+    {
+        imagecopyresampled($imageResource, $originalImageResoure, $dstX, $dstY, $srcX, $srcY, $dstWidth, $dstHeight, $srcWidth, $srcHeight);
     }
 
     /**
@@ -499,7 +550,7 @@ class ImageDeal
      * @param int $opacity
      * @return $this|bool
      */
-    public function waterImage($imageUrl, $posX = 0, $posY = 0, $opacity = 0)
+    public function waterImage($imageUrl, $posX = 0, $posY = 0, $opacity = 100)
     {
         $getImageStream = $this->imageServerResource->setImage($imageUrl)->getImageStream();
         if ($getImageStream !== false) {
@@ -519,6 +570,58 @@ class ImageDeal
         }
 
         return false;
+    }
+
+    /**
+     * 图片裁剪
+     *
+     * @param     $cropWidth            需要裁剪的宽度大小
+     * @param     $cropHeight           需要裁剪的高度大小
+     * @param int $x                    裁剪的开始x位置
+     * @param int $y                    裁剪的开始y位置
+     * @return $this
+     */
+    public function imageCrop($cropWidth, $cropHeight, $x = 0, $y = 0)
+    {
+        $crop = $this->imageCreateTrueColor($cropWidth, $cropHeight);
+        $this->imageCopyResAmPled($crop, $this->getImageResource(),  $cropWidth, $cropHeight, $this->backgroundImageWidth, $this->backgroundImageHeight,0, 0, $x, $y);
+        $this->setImageResource($crop);
+
+        return $this;
+    }
+
+    /**
+     * 将图片缩略 (缩略图)
+     */
+    public function imageThumb($width = 0, $height = 0, $isEqualRatio = true)
+    {
+        if ($isEqualRatio && (!$width || !$height)) {
+            $equal = $width ? 'w' : 'h';
+        }
+
+        if (isset($equal)) {
+            switch ($equal) {
+                case 'w':
+                    {
+                        dd($width * ($this->backgroundImageWidth / $this->backgroundImageHeight));
+                        dd(($this->backgroundImageWidth / $this->backgroundImageHeight) * $this->backgroundImageHeight);
+                        dd($this->backgroundImageWidth / $this->backgroundImageHeight);
+                        dd($width, $this->backgroundImageWidth);
+                        break;
+                    }
+                case 'h':
+                    {
+                        break;
+                    }
+                default:
+            }
+        }
+
+        $thumb = $this->imageCreateTrueColor($width, $height);
+        $this->imageCopyResAmPled($thumb, $this->getImageResource(), $this->backgroundImageWidth, $this->backgroundImageHeight, $width, $height, 0, 0, 0, 0);
+        $this->setImageResource($thumb);
+
+        return $this;
     }
 
     /**

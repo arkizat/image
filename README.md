@@ -21,6 +21,7 @@ composer require "shugachara/image"
 use ShugaChara\Image\ImageDeal;
 
 $imageUrl = app()->getPath() . '/4.png';
+$imageUrlB = app()->getPath() . '/a.png';
 $textFont = app()->getPath() . '/PINGFANG_HEAVY.TTF';
 $textSize = 34;
 $textColor = '#ffffff';
@@ -52,6 +53,13 @@ foreach ($lineSplit as $item) {
 }
 // 在线预览图片
 $imageDeal->preview();
+
+// 添加水印图片
+$imageDeal->setPosX(0);
+$imageDeal->waterImage($imageUrlB, 0, 0);
+
+// 图片裁剪
+$imageDeal->imageCrop(300, 200, 400, 100);
 
 // 保存图片
 $imageDeal->save(app()->getPath() . '/out.png');
