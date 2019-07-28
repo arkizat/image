@@ -591,10 +591,19 @@ class ImageDeal
     }
 
     /**
-     * 将图片缩略 (缩略图)
+     * 将图片缩略 - 支持等比值缩放 (缩略图)
+     *
+     * @param int  $width
+     * @param int  $height
+     * @param bool $isEqualRatio        是否需要等比缩放, 当true时, width 和 height 只能有一个有值,一个是0
+     * @return $this
      */
     public function imageThumb($width = 0, $height = 0, $isEqualRatio = true)
     {
+        if (!$isEqualRatio && (!$width || !$height)) {
+            return $this;
+        }
+
         if ($isEqualRatio && (!$width || !$height)) {
             $equal = $width ? 'w' : 'h';
         }
@@ -603,14 +612,12 @@ class ImageDeal
             switch ($equal) {
                 case 'w':
                     {
-                        dd($width * ($this->backgroundImageWidth / $this->backgroundImageHeight));
-                        dd(($this->backgroundImageWidth / $this->backgroundImageHeight) * $this->backgroundImageHeight);
-                        dd($this->backgroundImageWidth / $this->backgroundImageHeight);
-                        dd($width, $this->backgroundImageWidth);
+                        $height = $width * ($this->backgroundImageHeight / $this->backgroundImageWidth);
                         break;
                     }
                 case 'h':
                     {
+                        $width = $height * ($this->backgroundImageWidth / $this->backgroundImageHeight);
                         break;
                     }
                 default:

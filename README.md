@@ -61,6 +61,9 @@ $imageDeal->waterImage($imageUrlB, 0, 0);
 // 图片裁剪
 $imageDeal->imageCrop(300, 200, 400, 100);
 
+// 图片缩放
+$imageDeal->imageThumb(900, 0);
+
 // 保存图片
 $imageDeal->save(app()->getPath() . '/out.png');
 ```
