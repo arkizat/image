@@ -17,6 +17,8 @@
 
 namespace ShugaChara\Image;
 
+use ShugaChara\Core\Helpers;
+
 /**
  * Class ImageDeal
  *
@@ -642,7 +644,7 @@ class ImageDeal
     public function outImageMode($imageResource, $mime = self::DEFAULT_IMAGE_MIME, ...$params)
     {
         $ext = explode('/', $mime);
-        $mime = array_get($ext, '1', 'jpg');
+        $mime = Helpers::array_get($ext, '1', 'jpg');
 
         switch ($mime) {
             case 'png':

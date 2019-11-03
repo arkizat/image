@@ -17,6 +17,7 @@
 
 namespace ShugaChara\Image;
 
+use ShugaChara\Core\Helpers;
 use ShugaChara\Core\Traits\Singleton;
 use ShugaChara\Image\AbstractInterfaces\ImageInterface;
 
@@ -93,7 +94,7 @@ class Image implements ImageInterface
     {
         // TODO: Implement getImageWidth() method.
 
-        return (int) array_get($this->imageInfo, '0', 0);
+        return (int) Helpers::array_get($this->imageInfo, '0', 0);
     }
 
     /**
@@ -105,7 +106,7 @@ class Image implements ImageInterface
     {
         // TODO: Implement getImageHeight() method.
 
-        return (int) array_get($this->imageInfo, '1', 0);
+        return (int) Helpers::array_get($this->imageInfo, '1', 0);
     }
 
     /**
@@ -117,7 +118,7 @@ class Image implements ImageInterface
     {
         // TODO: Implement getImageMime() method.
 
-        return array_get($this->imageInfo, 'mime', 'image/jpg');
+        return Helpers::array_get($this->imageInfo, 'mime', 'image/jpg');
     }
 
     /**
