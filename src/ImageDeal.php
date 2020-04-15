@@ -497,10 +497,11 @@ class ImageDeal
         $maxCount = floor($width / $singleW);
 
         while ($len > $maxCount) {
+            $mb_strimwidth = mb_strimwidth($str, 0, $maxCount, '', $charset);
             // 成功取得一行
-            $result[] = mb_strimwidth($str, 0, $maxCount, '', $charset);
+            $result[] = $mb_strimwidth;
             // 移除上一行的字符
-            $str = str_replace($result[count($result) - 1], '', $str);
+            $str = substr($str, (stripos($str, $mb_strimwidth) + strlen($mb_strimwidth)));
             // 重新计算长度
             $len = (strlen($str) + mb_strlen($str, $charset)) / 2;
         }
