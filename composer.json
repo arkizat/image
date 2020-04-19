@@ -13,7 +13,7 @@
   ],
   "require": {
     "php": ">=7.0",
-    "shugachara/core": "^1.0"
+    "shugachara/core": "~2.0"
   },
   "autoload": {
     "psr-4": {
